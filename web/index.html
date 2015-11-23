@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Batalha Naval</title>
+
+        <script src="jquery-1.10.2.min.js"></script>
+        <script src="jogo.js" type="text/javascript" charset="utf-8"></script>
+        <script type="text/javascript" src="socket.js"></script>
+        <link rel="stylesheet" href="estilos.css" type="text/css" media="screen" title="no title" charset="utf-8">
+
+    </head>
+    <body id="corpo">
+        <ul>
+            <li>Cada jogador tem direito a um tiro</li>
+            <li>Quem derrubar todos os itens do adversário vence</li>
+            <li>O Jogador 1 (você) atira na "área do jogador 2"</li>
+        </ul>
+        <div id="player1" style="width: 40%; float: left;" >
+            <h1>Área do Jogador 1</h1>
+            <div id="tabuleiro-jogador1" class="tabuleiro">
+            </div>
+        </div>
+
+        <div id="player2" style="width: 40%; float: right;" >
+            <h1>Área do Jogador 2</h1>
+            <div id="tabuleiro-jogador2" class="tabuleiro">
+            </div>
+        </div>
+
+        <div id="log" style="width: 20%; margin: 0 auto;">
+        </div>
+
+
+    </body>
+</html>
