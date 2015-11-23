@@ -66,19 +66,23 @@ public class BatalhaNavalServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
-        
-        
-        if(batalhaNaval == null){
+        if(batalhaNaval != null){
+            if(batalhaNaval.isTemSegundoJogador()){
+                this.batalhaNaval = this.inicializarJogo();
+                this.batalhaNaval.setTemSegundoJogador(false);
+                json = new JSONObject(batalhaNaval);
+                response.getWriter().write(json.toString());
+            }else{
+                batalhaNaval.setTemSegundoJogador(true);
+                json = new JSONObject(batalhaNaval);
+                response.getWriter().write(json.toString());
+            }
+        }else{
             this.batalhaNaval = this.inicializarJogo();  
             this.batalhaNaval.setTemSegundoJogador(false);
-        }     
-        else{
-            this.batalhaNaval.setTemSegundoJogador(true);
+            json = new JSONObject(batalhaNaval);
+            response.getWriter().write(json.toString());
         }
-        json = new JSONObject(batalhaNaval);
-        response.getWriter().write(json.toString());
-        json = null;
-        
     }
     
     public BatalhaNaval inicializarJogo(){

@@ -37,15 +37,15 @@ public class WebsocketBatalhaNaval {
         peer.getUserProperties().put("jogador", player);
         peers.add(peer);
         ++i;
-        for (Session s : peers) {
-            if (s.isOpen() && player.equals(s.getUserProperties().get("jogador"))) {
-                try {
-                    s.getBasicRemote().sendText(player);
-                } catch (IOException ex) {
-                    Logger.getLogger(WebsocketBatalhaNaval.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-       }
+//        for (Session s : peers) {
+//            if (s.isOpen() && player.equals(s.getUserProperties().get("jogador"))) {
+//                try {
+//                    s.getBasicRemote().sendText(player);
+//                } catch (IOException ex) {
+//                    Logger.getLogger(WebsocketBatalhaNaval.class.getName()).log(Level.SEVERE, null, ex);
+//                }
+//            }
+//       }
     }
 
     /**

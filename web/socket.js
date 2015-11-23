@@ -5,6 +5,9 @@ var i = 1;
 var x, y;
 jogador = "jogador";
 ++i;
+var fimDeJogo = false;
+var jogou = false;
+var acertosAdversario = 0;
 
 function onOpen() {
     writeToScreen("Connected to " + serviceLocation);
@@ -19,6 +22,11 @@ function onMessageReceived(evt){
     var acertou = tiroNoMeuTabuleiro(tiroDisparado.x, tiroDisparado.y);
     if(acertou){
         jogou = true;
+        acertosAdversario++;
+        if(acertosAdversario === 20){
+            fimDeJogo = true;
+            alert("Você perdeu!");
+        }
     }else{
         jogou = false;
         alert("Agora é sua vez...");
@@ -32,7 +40,7 @@ function sendMessage(x,y) {
 
 function connectToServer(){
     wsocket = new WebSocket(serviceLocation+jogador);
-    wsocket.onopen = pegarJogador;
+//    wsocket.onopen = pegarJogador;
     wsocket.onmessage = onMessageReceived;
 }
 

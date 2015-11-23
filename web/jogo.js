@@ -2,6 +2,7 @@ var xhr = new XMLHttpRequest();
 var embarcacoes;
 var embarcacoesAdversarias;
 var jogou = false;
+var meusAcertos = 0;
 
 function tratarColecao(){
     if(xhr.readyState === 4){
@@ -93,6 +94,7 @@ function verificarTiroDisparado(x, y){
                 div.innerHTML = "<span style='margin-left: 10px; margin-top: 10px;'>X</span>";
                 div.style.border = "1px solid #ff0000";
                 div.style.backgroundColor = "#ffffff";
+                $(div).attr("onclick", "");
                 break;
             }
         }
@@ -102,13 +104,9 @@ function verificarTiroDisparado(x, y){
            div.innerHTML = "<span style='margin-left: 10px; margin-top: 10px;'>.</span>";
            div.style.border = "1px solid #0000ff";
            div.style.backgroundColor = "#ffffff";
+           $(div).attr("onclick", "");
     }
     return acertou;
-}
-
-function atirarTabuleiroAdversario(x, y){
-    var div = document.getElementById("tabuleiro2_casa_"+x+"_"+y);
-    div.style.backgroundColor = "green";
 }
 
 function atirar(evt){
@@ -121,11 +119,24 @@ function atirar(evt){
         var acertou = verificarTiroDisparado(posx,posy);
         if(acertou){
             jogou = false;
+            meusAcertos++;
+            if(meusAcertos === 20){
+                fimDeJogo = true;
+                alert("Você venceu!");
+            }
         }
         sendMessage(posx,posy);
     }
     else{
-       alert("Aguarde sua vez");
+        if(!fimDeJogo){
+            alert("Aguarde sua vez");
+        }else{
+            alert("Fim de Jogo");
+            novoJogo = confirm("Você deseja iniciar um novo jogo?");
+            if(novoJogo){
+                location.reload();
+            }
+        }
     }
 }
 
