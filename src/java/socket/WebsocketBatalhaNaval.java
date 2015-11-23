@@ -26,26 +26,17 @@ import servlets.TiroDisparadoEncoder;
  *
  * @author gabriel.ibson
  */
-@ServerEndpoint(value = "/batalhanavalendpoint/{jogador}", encoders = TiroDisparadoEncoder.class, decoders = TiroDisparadoDecoder.class)
+@ServerEndpoint(value = "/batalhanavalendpoint/{mesa}/{jogador}", encoders = TiroDisparadoEncoder.class, decoders = TiroDisparadoDecoder.class)
 public class WebsocketBatalhaNaval {
     private static int i = 1;
     private static Set<Session> peers = Collections.synchronizedSet(new HashSet<Session>());
   
     @OnOpen
-    public void onOpen (final Session peer, @PathParam("jogador") final String jogador) {
-        String player = jogador+i;
-        peer.getUserProperties().put("jogador", player);
+    public void onOpen (final Session peer, @PathParam("mesa") final String mesa, @PathParam("jogador") final String jogador) {
+        peer.getUserProperties().put("mesa", mesa);
+        i++;
+        peer.getUserProperties().put("jogador", jogador+i);
         peers.add(peer);
-        ++i;
-//        for (Session s : peers) {
-//            if (s.isOpen() && player.equals(s.getUserProperties().get("jogador"))) {
-//                try {
-//                    s.getBasicRemote().sendText(player);
-//                } catch (IOException ex) {
-//                    Logger.getLogger(WebsocketBatalhaNaval.class.getName()).log(Level.SEVERE, null, ex);
-//                }
-//            }
-//       }
     }
 
     /**
@@ -55,9 +46,11 @@ public class WebsocketBatalhaNaval {
      */
     @OnMessage
     public void onMessage(final Session session, final TiroDisparado tiro){
+        String mesa = (String) session.getUserProperties().get("mesa");
         String jogador = (String) session.getUserProperties().get("jogador");
          for (Session s : peers) {
-            if (s.isOpen() && !jogador.equals(s.getUserProperties().get("jogador"))) {
+            if (s.isOpen() && mesa.equals(s.getUserProperties().get("mesa")) 
+                    && !jogador.equals(s.getUserProperties().get("jogador"))) {
                 try {
                     try {
                         s.getBasicRemote().sendObject(tiro);
@@ -75,7 +68,6 @@ public class WebsocketBatalhaNaval {
     
     @OnClose
     public void onClose (Session peer) {
-        i -= 1;
         peers.remove(peer);
     }
     

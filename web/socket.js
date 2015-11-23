@@ -1,13 +1,16 @@
 var wsocket;
 var serviceLocation = "ws://" + document.location.host + document.location.pathname + "batalhanavalendpoint/";
 var jogador = '';
-var i = 1;
+var i = 0;
 var x, y;
 jogador = "jogador";
-++i;
 var fimDeJogo = false;
 var jogou = false;
 var acertosAdversario = 0;
+var $nickName;
+var mesa = "";
+var $batalhaWindow;
+var visualizador = false;
 
 function onOpen() {
     writeToScreen("Connected to " + serviceLocation);
@@ -39,7 +42,8 @@ function sendMessage(x,y) {
 }
 
 function connectToServer(){
-    wsocket = new WebSocket(serviceLocation+jogador);
+    mesa = "mesa" + $('#mesa option:selected').val();
+    wsocket = new WebSocket(serviceLocation+mesa+"/"+jogador);
 //    wsocket.onopen = pegarJogador;
     wsocket.onmessage = onMessageReceived;
 }
@@ -49,7 +53,29 @@ function pegarJogador(evt){
     alert("Conectado: "+jogador);
 }
 
+function isVisualizador(){
+    return visualizador;
+}
+
 $(document).ready(function(){ 
-    connectToServer();
+    $nickName = $('#nickname');
+    $batalhaWindow = $('.batalha-wrapper');
+    $batalhaWindow.hide();
+    $("#jogar").click(function(evt){
+       MontarTabuleiro();
+       evt.preventDefault();
+       connectToServer();
+       $('.batalha-signin').hide();
+       $batalhaWindow.show();
+    });
+    
+    $("#visualizar").click(function(evt){
+       visualizador = true;
+       evt.preventDefault();
+       MontarTabuleiro();
+       connectToServer();
+       $('.batalha-signin').hide();
+       $batalhaWindow.show();
+    });
 });
 
