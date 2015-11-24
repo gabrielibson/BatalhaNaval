@@ -3,12 +3,12 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/gabriel.ibson/NetBeansProjects/ListaWEB3/src/java/jogo/BatalhaNaval.java</file>
-            <file>file:/home/gabriel.ibson/NetBeansProjects/ListaWEB3/src/java/jogo/Tabuleiro.java</file>
-            <file>file:/home/gabriel.ibson/NetBeansProjects/ListaWEB3/src/java/socket/WebsocketBatalhaNaval.java</file>
-            <file>file:/home/gabriel.ibson/NetBeansProjects/ListaWEB3/src/java/servlets/BatalhaNavalServlet.java</file>
-            <file>file:/home/gabriel.ibson/NetBeansProjects/ListaWEB3/web/jogo.js</file>
-            <file>file:/home/gabriel.ibson/NetBeansProjects/ListaWEB3/web/socket.js</file>
+            <file>file:/home/gabriel.ibson/NetBeansProjects/listaweb3/src/java/socket/WebsocketBatalhaNaval.java</file>
+            <file>file:/home/gabriel.ibson/NetBeansProjects/listaweb3/web/css/estilos.css</file>
+            <file>file:/home/gabriel.ibson/NetBeansProjects/listaweb3/web/socket.js</file>
+            <file>file:/home/gabriel.ibson/NetBeansProjects/listaweb3/src/java/servlets/BatalhaNavalServlet.java</file>
+            <file>file:/home/gabriel.ibson/NetBeansProjects/listaweb3/web/jogo.js</file>
+            <file>file:/home/gabriel.ibson/NetBeansProjects/listaweb3/web/index.html</file>
         </group>
     </open-files>
 </project-private>
