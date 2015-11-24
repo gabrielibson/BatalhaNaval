@@ -3,48 +3,47 @@ var embarcacoes;
 var embarcacoesAdversarias;
 var jogou = false;
 var meusAcertos = 0;
+var mesaSemJogador = false;
+var mesaComDoisJogadores = false;
+var profile;
+var tabuleiro1 = document.getElementById("tabuleiro-jogador1");
+var tabuleiro2 = document.getElementById("tabuleiro-jogador2");
 
 function tratarColecao(){
     if (xhr.readyState === 4) {
         var text = xhr.responseText;
-        var partida = JSON.parse(text);
-        var jogador1 = partida.jogador1;
-        var jogador2 = partida.jogador2;
-
-        if (!isVisualizador()) {
-            if (!partida.temSegundoJogador) {
-                embarcacoes = jogador1.tabuleiro.embarcacoes;
-                embarcacoesAdversarias = jogador2.tabuleiro.embarcacoes;
-                for (var i = 0; i < embarcacoes.length; i++) {
-                    var embarcacao = embarcacoes[i];
-                    for (var j = 0; j < embarcacao.celulasEmbarcacao.length; j++) {
-                        var celula = embarcacao.celulasEmbarcacao[j];
-                        var div = document.getElementById("tabuleiro1_casa_" + celula.x + "_" + celula.y);
-                        div.style.backgroundColor = "cyan";
-                    }
-                }
+        if (text !== "") {
+            var partida = JSON.parse(text);
+            if (!isVisualizador()) {
+                setEmbarcacoesJogador(partida);
+                $('.batalha-signin').hide();
+                $('.batalha-wrapper').show();
             } else {
-                embarcacoes = jogador2.tabuleiro.embarcacoes;
-                embarcacoesAdversarias = jogador1.tabuleiro.embarcacoes;
-                for (var i = 0; i < embarcacoes.length; i++) {
-                    var embarcacao = embarcacoes[i];
-                    for (var j = 0; j < embarcacao.celulasEmbarcacao.length; j++) {
-                        var celula = embarcacao.celulasEmbarcacao[j];
-                        var div = document.getElementById("tabuleiro1_casa_" + celula.x + "_" + celula.y);
-                        div.style.backgroundColor = "cyan";
-                    }
-                }
+                setEmbarcacoesVisualizador(partida);
+                $('.batalha-signin').hide();
+                $('.batalha-wrapper').show();
             }
-        }else{
-            setEmbarcacoesVisualizador(jogador1,jogador2);
+        }else {
+            if (profile === "visualizador") {
+                mesaSemJogador = true;
+                tabuleiro1.innerHTML = "";
+                tabuleiro2.innerHTML = "";
+                alert("A mesa ainda não tem jogadores, por favor tente outra mesa ou clique em Jogar.");
+            }
+            else {
+                mesaComDoisJogadores = true;
+                tabuleiro1.innerHTML = "";
+                tabuleiro2.innerHTML = "";
+                alert("A mesa já tem dois jogadores, por favor dirija-se a outra mesa para jogar ou clique em Visualizar.");
+            }
         }
     }
 }
 
-function MontarTabuleiro() {
+function MontarTabuleiro(codMesa, perfil) {
     var i;
-    var tabuleiro1 = document.getElementById("tabuleiro-jogador1");
-    var tabuleiro2 = document.getElementById("tabuleiro-jogador2");
+    tabuleiro1 = document.getElementById("tabuleiro-jogador1");
+    tabuleiro2 = document.getElementById("tabuleiro-jogador2");
     for (i = 0; i < 10; i++) {
         divLinhaTabuleiro1 = "<div id='tabuleiro1_linha_" + i.toString() + "' class='linha' >";
         divLinhaTabuleiro2 = "<div  id='tabuleiro2_linha_" + i.toString() + "' class='linha' >";
@@ -74,12 +73,15 @@ function MontarTabuleiro() {
             newChildTab2.innerHTML = divColunaTabuleiro2;
         }
     }
+    profile = perfil;
     xhr.onreadystatechange = tratarColecao;
-    xhr.open("get", "BatalhaNavalServlet", true);
+    xhr.open("get", "BatalhaNavalServlet?mesa="+codMesa+"&perfil="+perfil, true);
     xhr.send(null);
 }
 
-function setEmbarcacoesVisualizador(jogador1,jogador2){
+function setEmbarcacoesVisualizador(partida){
+    var jogador1 = partida.jogador1;
+    var jogador2 = partida.jogador2;
     var embarcacoes = jogador1.tabuleiro.embarcacoes;
     var embarcacoesAdversarias = jogador2.tabuleiro.embarcacoes;
     for (var i = 0; i < embarcacoes.length; i++) {
@@ -96,6 +98,34 @@ function setEmbarcacoesVisualizador(jogador1,jogador2){
             var celula = embarcacao.celulasEmbarcacao[j];
             var div = document.getElementById("tabuleiro2_casa_" + celula.x + "_" + celula.y);
             div.style.backgroundColor = "cyan";
+        }
+    }
+}
+
+function setEmbarcacoesJogador(partida) {
+    var jogador1 = partida.jogador1;
+    var jogador2 = partida.jogador2;
+    if (!partida.temSegundoJogador) {
+        embarcacoes = jogador1.tabuleiro.embarcacoes;
+        embarcacoesAdversarias = jogador2.tabuleiro.embarcacoes;
+        for (var i = 0; i < embarcacoes.length; i++) {
+            var embarcacao = embarcacoes[i];
+            for (var j = 0; j < embarcacao.celulasEmbarcacao.length; j++) {
+                var celula = embarcacao.celulasEmbarcacao[j];
+                var div = document.getElementById("tabuleiro1_casa_" + celula.x + "_" + celula.y);
+                div.style.backgroundColor = "cyan";
+            }
+        }
+    } else {
+        embarcacoes = jogador2.tabuleiro.embarcacoes;
+        embarcacoesAdversarias = jogador1.tabuleiro.embarcacoes;
+        for (var i = 0; i < embarcacoes.length; i++) {
+            var embarcacao = embarcacoes[i];
+            for (var j = 0; j < embarcacao.celulasEmbarcacao.length; j++) {
+                var celula = embarcacao.celulasEmbarcacao[j];
+                var div = document.getElementById("tabuleiro1_casa_" + celula.x + "_" + celula.y);
+                div.style.backgroundColor = "cyan";
+            }
         }
     }
 }
