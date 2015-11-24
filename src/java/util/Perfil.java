@@ -10,6 +10,6 @@ package util;
  * @author gabriel.ibson
  */
 public class Perfil {
-    static final String JOGADOR = "jogador";
-    static final String VISUALIZADOR = "visualizador";
+    public static final String JOGADOR = "jogador";
+    public static final String VISUALIZADOR = "visualizador";
 }

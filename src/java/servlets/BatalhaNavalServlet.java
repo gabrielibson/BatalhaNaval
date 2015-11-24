@@ -7,6 +7,8 @@ package servlets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -14,8 +16,10 @@ import javax.servlet.http.HttpServletResponse;
 import jogo.BatalhaNaval;
 import jogo.Embarcacao;
 import jogo.Jogador;
+import jogo.Mesa;
 import jogo.Tabuleiro;
 import org.json.JSONObject;
+import util.Perfil;
 
 /**
  *
@@ -26,6 +30,7 @@ public class BatalhaNavalServlet extends HttpServlet {
     private static int codigoJogador = 0;
     private BatalhaNaval batalhaNaval = null;
     JSONObject json = null;
+    private static List<Mesa> listaMesas = new ArrayList<>();
     
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -65,23 +70,69 @@ public class BatalhaNavalServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        String perfil = request.getParameter("perfil");
+        if(perfil.equals(Perfil.JOGADOR)){
+            getContextoJogador(request,response);
+        }else{
+            getContextoVisualizador(request, response);
+        }
+    }
+    
+    private void getContextoJogador(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException{
+        String codMesa = request.getParameter("mesa");
+        String nomeMesa = "mesa"+codMesa;
+        int codigo = Integer.parseInt(codMesa);
+        Mesa mesa = null;
         
         if(batalhaNaval != null){
-            if(batalhaNaval.isTemSegundoJogador()){
-                this.batalhaNaval = this.inicializarJogo();
-                this.batalhaNaval.setTemSegundoJogador(false);
-                json = new JSONObject(batalhaNaval);
-                response.getWriter().write(json.toString());
+            for(Mesa m : listaMesas){
+                if(m.getCodigo() == codigo){
+                    mesa = m;
+                    break;
+                }
+            }
+            if(mesa != null){
+                if(!mesa.getBatalhaNaval().isTemSegundoJogador()){
+                    mesa.getBatalhaNaval().setTemSegundoJogador(true);
+                    json = new JSONObject(mesa.getBatalhaNaval());
+                    response.getWriter().write(json.toString());
+                }else{
+                    response.getWriter().write("");
+                }
             }else{
-                batalhaNaval.setTemSegundoJogador(true);
+                this.batalhaNaval = this.inicializarJogo();  
+                this.batalhaNaval.setTemSegundoJogador(false);
+                mesa = new Mesa(nomeMesa, codigo, batalhaNaval);
+                listaMesas.add(mesa);
                 json = new JSONObject(batalhaNaval);
                 response.getWriter().write(json.toString());
             }
         }else{
             this.batalhaNaval = this.inicializarJogo();  
             this.batalhaNaval.setTemSegundoJogador(false);
+            mesa = new Mesa(nomeMesa, codigo, batalhaNaval);
+            listaMesas.add(mesa);
             json = new JSONObject(batalhaNaval);
             response.getWriter().write(json.toString());
+        }
+    }
+    
+    private void getContextoVisualizador(HttpServletRequest request, HttpServletResponse response)
+        throws IOException{
+        String codMesa = request.getParameter("mesa");
+        int codigo = Integer.parseInt(codMesa);
+        BatalhaNaval btlNaval = null;
+        for(Mesa mesa : listaMesas){
+            if(mesa.getCodigo() == codigo){
+                btlNaval = mesa.getBatalhaNaval();
+            }
+        }
+        if(btlNaval != null){
+            json = new JSONObject(btlNaval);
+            response.getWriter().write(json.toString());
+        }else{
+            response.getWriter().write("");
         }
     }
     

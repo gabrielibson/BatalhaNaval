@@ -42,7 +42,6 @@ function sendMessage(x,y) {
 }
 
 function connectToServer(){
-    mesa = "mesa" + $('#mesa option:selected').val();
     wsocket = new WebSocket(serviceLocation+mesa+"/"+jogador);
 //    wsocket.onopen = pegarJogador;
     wsocket.onmessage = onMessageReceived;
@@ -57,25 +56,28 @@ function isVisualizador(){
     return visualizador;
 }
 
-$(document).ready(function(){ 
+$(document).ready(function () {
     $nickName = $('#nickname');
     $batalhaWindow = $('.batalha-wrapper');
     $batalhaWindow.hide();
-    $("#jogar").click(function(evt){
-       MontarTabuleiro();
-       evt.preventDefault();
-       connectToServer();
-       $('.batalha-signin').hide();
-       $batalhaWindow.show();
+
+    $("#jogar").click(function (evt) {
+        var codMesa = $('#mesa option:selected').val();
+        mesa = "mesa" + codMesa;
+        var perfil = "jogador";
+        MontarTabuleiro(codMesa, perfil);
+        evt.preventDefault();
+        connectToServer();
     });
-    
-    $("#visualizar").click(function(evt){
-       visualizador = true;
-       evt.preventDefault();
-       MontarTabuleiro();
-       connectToServer();
-       $('.batalha-signin').hide();
-       $batalhaWindow.show();
+
+    $("#visualizar").click(function (evt) {
+        visualizador = true;
+        var codMesa = $('#mesa option:selected').val();
+        mesa = "mesa" + codMesa;
+        var perfil = "visualizador";
+        MontarTabuleiro(codMesa, perfil);
+        evt.preventDefault();
+        connectToServer();
     });
 });
 
