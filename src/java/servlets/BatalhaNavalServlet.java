@@ -78,6 +78,30 @@ public class BatalhaNavalServlet extends HttpServlet {
         }
     }
     
+    /**
+     * Handles the HTTP <code>POST</code> method.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String codMesa = request.getParameter("mesa");
+        int codigo = Integer.parseInt(codMesa);
+        
+        for (Mesa mesa : listaMesas) {           
+            if(mesa != null){
+                if(mesa.getCodigo() == codigo){
+                    listaMesas.remove(mesa);
+                    break;
+                }
+            }
+        }
+    }
+    
     private void getContextoJogador(HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException{
         String codMesa = request.getParameter("mesa");
@@ -122,14 +146,14 @@ public class BatalhaNavalServlet extends HttpServlet {
         throws IOException{
         String codMesa = request.getParameter("mesa");
         int codigo = Integer.parseInt(codMesa);
-        BatalhaNaval btlNaval = null;
-        for(Mesa mesa : listaMesas){
-            if(mesa.getCodigo() == codigo){
-                btlNaval = mesa.getBatalhaNaval();
+        Mesa mesa = null;
+        for(Mesa m : listaMesas){
+            if(m.getCodigo() == codigo){
+                mesa = m;
             }
         }
-        if(btlNaval != null){
-            json = new JSONObject(btlNaval);
+        if(mesa != null){
+            json = new JSONObject(mesa.getBatalhaNaval());
             response.getWriter().write(json.toString());
         }else{
             response.getWriter().write("");
@@ -198,19 +222,7 @@ public class BatalhaNavalServlet extends HttpServlet {
         return batalhaNaval;
     }
     
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        processRequest(request, response);
-    }
+    
 
     /**
      * Returns a short description of the servlet.

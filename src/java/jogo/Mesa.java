@@ -21,6 +21,8 @@ public class Mesa {
         this.codigo = codigo;
         this.batalhaNaval = batalhaNaval;
     }
+    
+    public Mesa(){}
 
     public String getNome() {
         return nome;

@@ -182,6 +182,11 @@ function verificarTiroDisparado(x, y){
     return acertou;
 }
 
+function setFimDeJogo(bool){
+    fimDeJogo = bool;
+}
+
+
 function atirar(evt){
     if(!jogou){
         jogou = true;
@@ -194,7 +199,7 @@ function atirar(evt){
             jogou = false;
             meusAcertos++;
             if(meusAcertos === 20){
-                fimDeJogo = true;
+                setFimDeJogo(true);
                 alert("Você venceu!");
             }
         }

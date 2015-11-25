@@ -11,6 +11,7 @@ var $nickName;
 var mesa = "";
 var $batalhaWindow;
 var visualizador = false;
+var xhr = new XMLHttpRequest();
 
 function onOpen() {
     writeToScreen("Connected to " + serviceLocation);
@@ -20,19 +21,24 @@ function writeToScreen(message) {
     alert(message);
 }
 
-function onMessageReceived(evt){
+function onMessageReceived(evt) {
     var tiroDisparado = JSON.parse(evt.data);
-    var acertou = tiroNoMeuTabuleiro(tiroDisparado.x, tiroDisparado.y);
-    if(acertou){
-        jogou = true;
-        acertosAdversario++;
-        if(acertosAdversario === 20){
-            fimDeJogo = true;
-            alert("Você perdeu!");
+    if (tiroDisparado !== 'undefined') {
+        var acertou = tiroNoMeuTabuleiro(tiroDisparado.x, tiroDisparado.y);
+        if (acertou) {
+            jogou = true;
+            acertosAdversario++;
+            if (acertosAdversario === 20) {
+                fimDeJogo = true;
+                alert("Você perdeu!");
+            }
+        } else {
+            jogou = false;
+            alert("Agora é sua vez...");
         }
-    }else{
-        jogou = false;
-        alert("Agora é sua vez...");
+    } else {
+        alert(evt.data);
+        location.reload();
     }
 }
 
@@ -43,7 +49,7 @@ function sendMessage(x,y) {
 
 function connectToServer(){
     wsocket = new WebSocket(serviceLocation+mesa+"/"+jogador);
-//    wsocket.onopen = pegarJogador;
+//  wsocket.onopen = pegarJogador;
     wsocket.onmessage = onMessageReceived;
 }
 
@@ -56,15 +62,37 @@ function isVisualizador(){
     return visualizador;
 }
 
+function sair(){
+   
+    if (!isVisualizador()) {
+        xhr.onreadystatechange = function () {
+		if(xhr.readyState === 4) {
+                    setFimDeJogo(true);
+                    wsocket.send("Seu oponente encerrou a partida!");
+                }
+	};        
+        var params = "mesa="+encodeURIComponent(codMesa);
+        xhr.open("POST", "BatalhaNavalServlet", true);
+	xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+	xhr.setRequestHeader("Content-length", params.length);
+	xhr.send(params);        
+    }
+    
+    $('.batalha-signin').show();
+    $('.batalha-wrapper').hide();
+    wsocket.close();
+ }
+
 $(document).ready(function () {
     $nickName = $('#nickname');
     $batalhaWindow = $('.batalha-wrapper');
     $batalhaWindow.hide();
-
+    $telaInicial = $('.batalha-signin');
+       
     $("#jogar").click(function (evt) {
-        var codMesa = $('#mesa option:selected').val();
+        codMesa = $('#mesa option:selected').val();
         mesa = "mesa" + codMesa;
-        var perfil = "jogador";
+        perfil = "jogador";
         MontarTabuleiro(codMesa, perfil);
         evt.preventDefault();
         connectToServer();
@@ -72,12 +100,16 @@ $(document).ready(function () {
 
     $("#visualizar").click(function (evt) {
         visualizador = true;
-        var codMesa = $('#mesa option:selected').val();
+        codMesa = $('#mesa option:selected').val();
         mesa = "mesa" + codMesa;
-        var perfil = "visualizador";
+        perfil = "visualizador";
         MontarTabuleiro(codMesa, perfil);
         evt.preventDefault();
         connectToServer();
+    });
+    
+    $("#sair").click(function(){
+        sair();        
     });
 });
 
