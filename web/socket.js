@@ -22,8 +22,8 @@ function writeToScreen(message) {
 }
 
 function onMessageReceived(evt) {
-    var tiroDisparado = JSON.parse(evt.data);
-    if (tiroDisparado !== 'undefined') {
+    if(evt.data.indexOf("x") !== -1){
+        var tiroDisparado = JSON.parse(evt.data);
         var acertou = tiroNoMeuTabuleiro(tiroDisparado.x, tiroDisparado.y);
         if (acertou) {
             jogou = true;
@@ -31,18 +31,27 @@ function onMessageReceived(evt) {
             if (acertosAdversario === 20) {
                 fimDeJogo = true;
                 alert("Você perdeu!");
+                document.getElementById("tabuleiro-jogador1").innerHTML = "";
+                document.getElementById("tabuleiro-jogador2").innerHTML = "";
+                location.reload();
             }
         } else {
             jogou = false;
             alert("Agora é sua vez...");
         }
-    } else {
+    }else{
         alert(evt.data);
+        document.getElementById("tabuleiro-jogador1").innerHTML = "";
+        document.getElementById("tabuleiro-jogador2").innerHTML = "";
         location.reload();
     }
 }
 
-function sendMessage(x,y) {
+function sendMensagem(msg){
+    wsocket.send(msg);
+}
+
+function sendTiro(x,y) {
     var msg = '{"x":"' + x + '", "y":"' + y + '"}';
     wsocket.send(msg);
 }
@@ -62,29 +71,29 @@ function isVisualizador(){
     return visualizador;
 }
 
-function sair(){
-   
+function sair() {
     if (!isVisualizador()) {
         xhr.onreadystatechange = function () {
-		if(xhr.readyState === 4) {
-                    setFimDeJogo(true);
-                    wsocket.send("Seu oponente encerrou a partida!");
-                }
-	};        
-        var params = "mesa="+encodeURIComponent(codMesa);
+            if (xhr.readyState === 4) {
+                sendMensagem("Seu oponente abandonou a partida!");
+                $('.batalha-wrapper').hide();
+                $('.batalha-signin').show();
+                document.getElementById("tabuleiro-jogador1").innerHTML = "";
+                document.getElementById("tabuleiro-jogador2").innerHTML = "";
+            }
+        };
+        var params = "mesa=" + encodeURIComponent(codMesa);
         xhr.open("POST", "BatalhaNavalServlet", true);
-	xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-	xhr.setRequestHeader("Content-length", params.length);
-	xhr.send(params);        
+        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhr.send(params);
+    }else{
+        location.reload();
+        wsocket.close();
     }
-    
-    $('.batalha-signin').show();
-    $('.batalha-wrapper').hide();
-    wsocket.close();
- }
+}
 
 $(document).ready(function () {
-    $nickName = $('#nickname');
+    $nickName = $('#nickname').val();
     $batalhaWindow = $('.batalha-wrapper');
     $batalhaWindow.hide();
     $telaInicial = $('.batalha-signin');

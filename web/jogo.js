@@ -201,9 +201,12 @@ function atirar(evt){
             if(meusAcertos === 20){
                 setFimDeJogo(true);
                 alert("Você venceu!");
+                document.getElementById("tabuleiro-jogador1").innerHTML = "";
+                document.getElementById("tabuleiro-jogador2").innerHTML = "";
+                location.reload();
             }
         }
-        sendMessage(posx,posy);
+        sendTiro(posx,posy);
     }
     else{
         if(!fimDeJogo){

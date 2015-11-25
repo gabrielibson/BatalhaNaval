@@ -28,11 +28,14 @@ public class TiroDisparadoDecoder implements Decoder.Text<TiroDisparado>{
     @Override
     public TiroDisparado decode(final String textMessage) throws DecodeException {
         TiroDisparado tiro = new TiroDisparado();
-        JsonObject obj = Json.createReader(new StringReader(textMessage))
-                .readObject();
-        tiro.setX(Integer.parseInt(obj.getString("x")));
-        tiro.setY(Integer.parseInt(obj.getString("y")));
-        
+        if ((textMessage).contains("x")) {
+            JsonObject obj = Json.createReader(new StringReader(textMessage))
+                    .readObject();
+            tiro.setX(Integer.parseInt(obj.getString("x")));
+            tiro.setY(Integer.parseInt(obj.getString("y")));
+        }else{
+            tiro.setMsg(textMessage);
+        }
         return tiro;
     }
 
