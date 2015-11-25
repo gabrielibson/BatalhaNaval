@@ -13,6 +13,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.websocket.EncodeException;
 import javax.websocket.OnClose;
+import javax.websocket.OnError;
 import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
 import javax.websocket.Session;
@@ -66,9 +67,31 @@ public class WebsocketBatalhaNaval {
         
     }
     
+//    @OnMessage
+//    public void onMessage(final Session session, String msg){
+//        String mesa = (String) session.getUserProperties().get("mesa");
+//        String jogador = (String) session.getUserProperties().get("jogador");
+//        for (Session s : peers) {
+//            if (s.isOpen() && mesa.equals(s.getUserProperties().get("mesa")) 
+//                    && !jogador.equals(s.getUserProperties().get("jogador"))) {
+//                try {
+//                    s.getBasicRemote().sendText(msg);
+//                } catch (IOException ex) {
+//                    Logger.getLogger(WebsocketBatalhaNaval.class.getName()).log(Level.SEVERE, null, ex);
+//                }
+//            }
+//       }
+//        
+//    }
+//    
+    
     @OnClose
     public void onClose (Session peer) {
         peers.remove(peer);
+    }
+
+    @OnError
+    public void onError(Throwable t) {
     }
     
 }
