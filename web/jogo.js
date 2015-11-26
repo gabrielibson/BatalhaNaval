@@ -186,6 +186,9 @@ function setFimDeJogo(bool){
     fimDeJogo = bool;
 }
 
+function zerarMeusAcertos(){
+    meusAcertos = 0;
+}
 
 function atirar(evt){
     if(!jogou){
@@ -201,12 +204,12 @@ function atirar(evt){
             if(meusAcertos === 20){
                 setFimDeJogo(true);
                 alert("Você venceu!");
-                document.getElementById("tabuleiro-jogador1").innerHTML = "";
-                document.getElementById("tabuleiro-jogador2").innerHTML = "";
-                location.reload();
+                sair("Seu oponente venceu a partida!");
             }
         }
-        sendTiro(posx,posy);
+        if(!fimDeJogo){
+            sendTiro(posx,posy);
+        }
     }
     else{
         if(!fimDeJogo){

@@ -6,7 +6,6 @@ var x, y;
 jogador = "jogador";
 var fimDeJogo = false;
 var jogou = false;
-var acertosAdversario = 0;
 var $nickName;
 var mesa = "";
 var $batalhaWindow;
@@ -27,24 +26,22 @@ function onMessageReceived(evt) {
         var acertou = tiroNoMeuTabuleiro(tiroDisparado.x, tiroDisparado.y);
         if (acertou) {
             jogou = true;
-            acertosAdversario++;
-            if (acertosAdversario === 20) {
-                fimDeJogo = true;
-                alert("Você perdeu!");
-                document.getElementById("tabuleiro-jogador1").innerHTML = "";
-                document.getElementById("tabuleiro-jogador2").innerHTML = "";
-                location.reload();
-            }
         } else {
             jogou = false;
             alert("Agora é sua vez...");
         }
     }else{
+        deixarPartida(evt);
+    }
+}
+
+function deixarPartida(evt){
         alert(evt.data);
+        jogou = false;
+        fimDeJogo = true;
         document.getElementById("tabuleiro-jogador1").innerHTML = "";
         document.getElementById("tabuleiro-jogador2").innerHTML = "";
         location.reload();
-    }
 }
 
 function sendMensagem(msg){
@@ -57,6 +54,9 @@ function sendTiro(x,y) {
 }
 
 function connectToServer(){
+    if(wsocket !== undefined){
+        wsocket.close();
+    }
     wsocket = new WebSocket(serviceLocation+mesa+"/"+jogador);
 //  wsocket.onopen = pegarJogador;
     wsocket.onmessage = onMessageReceived;
@@ -71,15 +71,17 @@ function isVisualizador(){
     return visualizador;
 }
 
-function sair() {
+function sair(msg) {
     if (!isVisualizador()) {
         xhr.onreadystatechange = function () {
             if (xhr.readyState === 4) {
-                sendMensagem("Seu oponente abandonou a partida!");
                 $('.batalha-wrapper').hide();
                 $('.batalha-signin').show();
                 document.getElementById("tabuleiro-jogador1").innerHTML = "";
                 document.getElementById("tabuleiro-jogador2").innerHTML = "";
+                zerarMeusAcertos();
+                jogou = false;
+                sendMensagem(msg);
             }
         };
         var params = "mesa=" + encodeURIComponent(codMesa);
@@ -118,7 +120,7 @@ $(document).ready(function () {
     });
     
     $("#sair").click(function(){
-        sair();        
+        sair("Seu oponente abandonou a partida!");        
     });
 });
 
