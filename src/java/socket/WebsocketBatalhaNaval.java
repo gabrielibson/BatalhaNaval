@@ -22,21 +22,26 @@ import javax.websocket.server.ServerEndpoint;
 import servlets.TiroDisparado;
 import servlets.TiroDisparadoDecoder;
 import servlets.TiroDisparadoEncoder;
+import util.Perfil;
 
 /**
  *
  * @author gabriel.ibson
  */
-@ServerEndpoint(value = "/batalhanavalendpoint/{mesa}/{jogador}", encoders = TiroDisparadoEncoder.class, decoders = TiroDisparadoDecoder.class)
+@ServerEndpoint(value = "/batalhanavalendpoint/{mesa}/{perfil}", encoders = TiroDisparadoEncoder.class, decoders = TiroDisparadoDecoder.class)
 public class WebsocketBatalhaNaval {
     private static int i = 1;
     private static Set<Session> peers = Collections.synchronizedSet(new HashSet<Session>());
   
     @OnOpen
-    public void onOpen (final Session peer, @PathParam("mesa") final String mesa, @PathParam("jogador") final String jogador) {
+    public void onOpen (final Session peer, @PathParam("mesa") final String mesa, @PathParam("perfil") final String perfil) {
         peer.getUserProperties().put("mesa", mesa);
-        i++;
-        peer.getUserProperties().put("jogador", jogador+i);
+        if(perfil.equals(Perfil.JOGADOR)){
+            i++;
+            peer.getUserProperties().put("perfil", Perfil.JOGADOR+i);
+        }else{
+            peer.getUserProperties().put("perfil", Perfil.VISUALIZADOR);
+        }        
         peers.add(peer);
     }
 
@@ -48,11 +53,11 @@ public class WebsocketBatalhaNaval {
     @OnMessage
     public void onMessage(final Session session, final TiroDisparado tiro) {
         String mesa = (String) session.getUserProperties().get("mesa");
-        String jogador = (String) session.getUserProperties().get("jogador");
+        String perfil = (String) session.getUserProperties().get("perfil");
         if (("").equals(tiro.getMsg()) || tiro.getMsg() == null) {
             for (Session s : peers) {
                 if (s.isOpen() && mesa.equals(s.getUserProperties().get("mesa"))
-                        && !jogador.equals(s.getUserProperties().get("jogador"))) {
+                        && !perfil.equals(s.getUserProperties().get("perfil"))) {
                     try {
                         try {
                             s.getBasicRemote().sendObject(tiro);
@@ -68,7 +73,7 @@ public class WebsocketBatalhaNaval {
         }else{
             for (Session s : peers) {
                 if (s.isOpen() && mesa.equals(s.getUserProperties().get("mesa"))
-                        && !jogador.equals(s.getUserProperties().get("jogador"))) {
+                        && !perfil.equals(s.getUserProperties().get("perfil"))) {
                     try {
                         s.getBasicRemote().sendText(tiro.getMsg());
                     } catch (IOException ex) {

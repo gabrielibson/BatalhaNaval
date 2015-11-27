@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Batalha Naval</title>
+
+        <script src="jquery-1.10.2.min.js"></script>
+        <script src="jogo.js" type="text/javascript" charset="utf-8"></script>
+        <script type="text/javascript" src="socket.js"></script>
+        <link rel="stylesheet" href="css/bootstrap.css" type="text/css" media="screen" title="no title" charset="utf-8">
+        <link rel="stylesheet" href="css/estilos.css" type="text/css" media="screen" title="no title" charset="utf-8">
+        <link rel="stylesheet" href="css/bootstrap-responsive.css" type="text/css" media="screen" title="no title" charset="utf-8">
+
+    </head>
+    <body id="corpo">
+        
+        <div class="container batalha-signin">
+            <form class="form-signin">
+                <h2 class="form-signin-heading">Batalha Naval - Escolha uma mesa para jogar ou visualizar</h2>
+                <label for="nickname">Nickname</label>
+                <input type="text" class="input-block-level" placeholder="Nickname" id="nickname">
+                <label for="mesa">Mesa</label>
+                <select id="mesa">
+                    <option>Selecione</option>
+                    <option value="1">Mesa 1</option>
+                    <option value="2">Mesa 2</option>
+                    <option value="3">Mesa 3</option>
+                    <option value="4">Mesa 4</option>
+                    <option value="5">Mesa 5</option>
+                    <option value="6">Mesa 6</option>
+                    <option value="7">Mesa 7</option>
+                    <option value="8">Mesa 8</option>
+                    <option value="9">Mesa 9</option>
+                    <option value="10">Mesa 10</option>
+                    <option value="11">Mesa 11</option>
+                    <option value="12">Mesa 12</option>
+                </select>
+                <button class="btn btn-large btn-primary" type="submit" id="jogar">Jogar</button>
+                <button class="btn btn-large btn-primary" type="submit" id="visualizar">Visualizar</button>
+            </form>
+        </div>
+        
+        <div class="container batalha-wrapper">
+            
+            <ul>
+                <li>Cada jogador tem direito a um tiro</li>
+                <li>Quem derrubar todos os itens do adversário vence</li>
+                <li>O Jogador 1 (você) atira na "área do jogador 2"</li>
+            </ul>
+            
+            <div id="player1" style="width: 40%; float: left;" >
+                <h1>Área do Jogador 1</h1>
+                <div id="tabuleiro-jogador1" class="tabuleiro">
+                </div>
+            </div>
+
+            <div id="player2" style="width: 40%; float: right;" >
+                <h1>Área do Jogador 2</h1>
+                <div id="tabuleiro-jogador2" class="tabuleiro">
+                </div>
+            </div>
+           
+             <button class="btn btn-large btn-primary" type="button" id="sair">Sair</button>
+        </div>
+       
+    </body>
+</html>
