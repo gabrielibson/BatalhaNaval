@@ -106,6 +106,7 @@ public class BatalhaNavalServlet extends HttpServlet {
         throws ServletException, IOException{
         String codMesa = request.getParameter("mesa");
         String nomeMesa = "mesa"+codMesa;
+        String nomeJogador2 = request.getParameter("nickname");
         int codigo = Integer.parseInt(codMesa);
         Mesa mesa = null;
         
@@ -119,13 +120,14 @@ public class BatalhaNavalServlet extends HttpServlet {
             if(mesa != null){
                 if(!mesa.getBatalhaNaval().isTemSegundoJogador()){
                     mesa.getBatalhaNaval().setTemSegundoJogador(true);
+                    mesa.getBatalhaNaval().getJogador2().setNome(nomeJogador2);
                     json = new JSONObject(mesa.getBatalhaNaval());
                     response.getWriter().write(json.toString());
                 }else{
                     response.getWriter().write("");
                 }
             }else{
-                this.batalhaNaval = this.inicializarJogo();  
+                this.batalhaNaval = this.inicializarJogo(request, response);  
                 this.batalhaNaval.setTemSegundoJogador(false);
                 mesa = new Mesa(nomeMesa, codigo, batalhaNaval);
                 listaMesas.add(mesa);
@@ -133,7 +135,7 @@ public class BatalhaNavalServlet extends HttpServlet {
                 response.getWriter().write(json.toString());
             }
         }else{
-            this.batalhaNaval = this.inicializarJogo();  
+            this.batalhaNaval = this.inicializarJogo(request, response);  
             this.batalhaNaval.setTemSegundoJogador(false);
             mesa = new Mesa(nomeMesa, codigo, batalhaNaval);
             listaMesas.add(mesa);
@@ -160,7 +162,7 @@ public class BatalhaNavalServlet extends HttpServlet {
         }
     }
     
-    public BatalhaNaval inicializarJogo(){
+    public BatalhaNaval inicializarJogo(HttpServletRequest request, HttpServletResponse response){
         Tabuleiro tabuleiro1 = new Tabuleiro(10,10);
         Tabuleiro tabuleiro2 = new Tabuleiro(10,10);
         Embarcacao portaAviao = new Embarcacao(4);
@@ -176,7 +178,7 @@ public class BatalhaNavalServlet extends HttpServlet {
         
         Jogador jogador1 = new Jogador(tabuleiro1);
         jogador1.setCodigo(++codigoJogador);
-        jogador1.setNome("jogador"+codigoJogador);
+        jogador1.setNome(request.getParameter("nickname"));
         
         Jogador jogador2 = new Jogador(tabuleiro2);
         jogador2.setCodigo(++codigoJogador);

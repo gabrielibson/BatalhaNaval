@@ -20,15 +20,26 @@ function writeToScreen(message) {
 }
 
 function onMessageReceived(evt) {
-    if(evt.data.indexOf("x") !== -1){
+    if (evt.data.indexOf("x") !== -1) {
+        var acertou = false;
         var tiroDisparado = JSON.parse(evt.data);
-        var acertou = tiroNoMeuTabuleiro(tiroDisparado.x, tiroDisparado.y);
-        if (acertou) {
-            jogou = true;
-        } else {
-            jogou = false;
-            alert("Agora é sua vez...");
+        if (!visualizador) {
+            acertou = tiroNoMeuTabuleiro(tiroDisparado.x, tiroDisparado.y);
+            if (acertou) {
+                jogou = true;
+            } else {
+                jogou = false;
+                alert("Agora é sua vez...");
+            }
+        }else{
+            verificarTiroDisparado(tiroDisparado.x, tiroDisparado.y);
+            tiroNoMeuTabuleiro(tiroDisparado.x, tiroDisparado.y);
         }
+    } else if(evt.data.indexOf("2") !== -1){
+        var nickname = evt.data.split("_")[1];
+        $("#tabuleiro-jogador2").show();
+        $("#aguardando").hide();
+        document.getElementById("jogador2").innerHTML = nickname;
     }else{
         deixarPartida(evt);
     }
@@ -48,16 +59,20 @@ function sendMensagem(msg){
 }
 
 function sendTiro(x,y) {
-    var msg = '{"x":"' + x + '", "y":"' + y + '"}';
+    var msg = '{"x":"' + x + '", "y":"' + y + '","sender":"'+$nickName+'"}';
     wsocket.send(msg);
+}
+
+function open(evt){
+    alert(evt.data);
 }
 
 function connectToServer(){
     if(wsocket !== undefined){
         wsocket.close();
     }
-    wsocket = new WebSocket(serviceLocation+mesa+"/"+perfil);
-//  wsocket.onopen = pegarJogador;
+    wsocket = new WebSocket(serviceLocation+mesa+"/"+perfil+"/"+$nickName);
+    //wsocket.onopen = open;
     wsocket.onmessage = onMessageReceived;
 }
 
@@ -68,6 +83,10 @@ function connectToServer(){
 
 function isVisualizador(){
     return visualizador;
+}
+
+function getNickName(){
+    return $nickName;
 }
 
 function sair(msg) {
@@ -93,33 +112,55 @@ function sair(msg) {
     }
 }
 
+function validarEntrada(nome, codMesa){
+    msgErro = "";
+    var valido = true;
+    if(nome === undefined || nome === ""){
+        msgErro = "Digite um NickName!";
+        $("#nickname").focus();
+        valido = false;
+    }else if(codMesa === "0"){
+        msgErro = "Escolha uma Mesa para jogar ou visualizar!";
+        $("#mesa").focus();
+        valido = false;
+    }
+    return valido;
+}
+
 $(document).ready(function () {
-    $nickName = $('#nickname').val();
     $batalhaWindow = $('.batalha-wrapper');
     $batalhaWindow.hide();
     $telaInicial = $('.batalha-signin');
        
     $("#jogar").click(function (evt) {
+        $nickName = $('#nickname').val();
         codMesa = $('#mesa option:selected').val();
-        mesa = "mesa" + codMesa;
-        perfil = "jogador";
-        MontarTabuleiro(codMesa, perfil);
-        evt.preventDefault();
-        connectToServer();
+        if (validarEntrada($nickName, codMesa)) {
+            mesa = "mesa" + codMesa;
+            perfil = "jogador";
+            MontarTabuleiro(codMesa, perfil, $nickName);          
+        } else {
+            alert(msgErro);
+        }   
+        return false;
     });
 
     $("#visualizar").click(function (evt) {
+        $nickName = $('#nickname').val();
         visualizador = true;
         codMesa = $('#mesa option:selected').val();
-        mesa = "mesa" + codMesa;
-        perfil = "visualizador";
-        MontarTabuleiro(codMesa, perfil);
-        evt.preventDefault();
-        connectToServer();
+        if (validarEntrada($nickName, codMesa)) {
+            mesa = "mesa" + codMesa;
+            perfil = "visualizador";
+            MontarTabuleiro(codMesa, perfil, $nickName);
+        } else {
+            alert(msgErro);
+        }
+        return false;
     });
     
     $("#sair").click(function(){
-        sair("Seu oponente abandonou a partida!");        
+        sair($nickName+" abandonou a partida!");        
     });
 });
 

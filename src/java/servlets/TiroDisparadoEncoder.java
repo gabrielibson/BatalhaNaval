@@ -5,6 +5,7 @@
  */
 package servlets;
 
+import java.math.BigDecimal;
 import javax.json.Json;
 import javax.websocket.EncodeException;
 import javax.websocket.Encoder;
@@ -27,7 +28,8 @@ public class TiroDisparadoEncoder implements Encoder.Text<TiroDisparado>{
     public String encode(final TiroDisparado tiro) throws EncodeException {
         return Json.createObjectBuilder()
                 .add("x", String.valueOf(tiro.getX()))
-                .add("y", String.valueOf(tiro.getY())).build()
+                .add("y", String.valueOf(tiro.getY()))
+                .add("sender", String.valueOf(tiro.getSender())).build()
                 .toString();
     }
 

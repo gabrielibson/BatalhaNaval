@@ -21,7 +21,7 @@
                 <input type="text" class="input-block-level" placeholder="Nickname" id="nickname">
                 <label for="mesa">Mesa</label>
                 <select id="mesa">
-                    <option>Selecione</option>
+                    <option value="0">Selecione</option>
                     <option value="1">Mesa 1</option>
                     <option value="2">Mesa 2</option>
                     <option value="3">Mesa 3</option>
@@ -49,14 +49,17 @@
             </ul>
             
             <div id="player1" style="width: 40%; float: left;" >
-                <h1>Área do Jogador 1</h1>
+                <h1>Área de <span id="jogador1"></span></h1>
                 <div id="tabuleiro-jogador1" class="tabuleiro">
                 </div>
             </div>
 
             <div id="player2" style="width: 40%; float: right;" >
-                <h1>Área do Jogador 2</h1>
+                <h1>Área de <span id="jogador2"></span></h1>
                 <div id="tabuleiro-jogador2" class="tabuleiro">
+                </div>
+                <div id="aguardando">
+                    <h2>Aguardando Oponente...</h2>
                 </div>
             </div>
            

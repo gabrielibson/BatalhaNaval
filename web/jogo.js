@@ -18,11 +18,32 @@ function tratarColecao(){
                 setEmbarcacoesJogador(partida);
                 $('.batalha-signin').hide();
                 $('.batalha-wrapper').show();
+                if (partida.temSegundoJogador) {
+                    document.getElementById("jogador1").innerHTML = partida.jogador2.nome;
+                    document.getElementById("jogador2").innerHTML = partida.jogador1.nome;
+                    $("#tabuleiro-jogador2").show();
+                    $("#aguardando").hide();
+                } else {
+                    document.getElementById("jogador1").innerHTML = partida.jogador1.nome;
+                    $("#tabuleiro-jogador2").hide();
+                    $("#aguardando").show();
+                }
             } else {
                 setEmbarcacoesVisualizador(partida);
                 $('.batalha-signin').hide();
                 $('.batalha-wrapper').show();
-            }
+                if (partida.temSegundoJogador) {
+                    document.getElementById("jogador1").innerHTML = partida.jogador1.nome;
+                    document.getElementById("jogador2").innerHTML = partida.jogador2.nome;
+                    $("#tabuleiro-jogador2").show();
+                    $("#aguardando").hide();
+                } else {
+                    document.getElementById("jogador1").innerHTML = partida.jogador1.nome;
+                    $("#tabuleiro-jogador2").hide();
+                    $("#aguardando").show();
+                }
+            } 
+            connectToServer();
         }else {
             if (profile === "visualizador") {
                 mesaSemJogador = true;
@@ -40,7 +61,15 @@ function tratarColecao(){
     }
 }
 
-function MontarTabuleiro(codMesa, perfil) {
+function isMesaComDoisJogadores(){
+    return mesaComDoisJogadores;
+}
+
+function isMesaSemJogador(){
+    return mesaSemJogador;
+}
+
+function MontarTabuleiro(codMesa, perfil, nickname) {
     var i;
     tabuleiro1 = document.getElementById("tabuleiro-jogador1");
     tabuleiro2 = document.getElementById("tabuleiro-jogador2");
@@ -75,7 +104,7 @@ function MontarTabuleiro(codMesa, perfil) {
     }
     profile = perfil;
     xhr.onreadystatechange = tratarColecao;
-    xhr.open("get", "BatalhaNavalServlet?mesa="+codMesa+"&perfil="+perfil, true);
+    xhr.open("get", "BatalhaNavalServlet?mesa="+codMesa+"&perfil="+perfil+"&nickname="+nickname, true);
     xhr.send(null);
 }
 
@@ -204,7 +233,7 @@ function atirar(evt){
             if(meusAcertos === 20){
                 setFimDeJogo(true);
                 alert("Você venceu!");
-                sair("Seu oponente venceu a partida!");
+                sair(getNickName()+" venceu a partida!");
             }
         }
         if(!fimDeJogo){

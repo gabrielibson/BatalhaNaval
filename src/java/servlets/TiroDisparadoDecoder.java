@@ -33,6 +33,7 @@ public class TiroDisparadoDecoder implements Decoder.Text<TiroDisparado>{
                     .readObject();
             tiro.setX(Integer.parseInt(obj.getString("x")));
             tiro.setY(Integer.parseInt(obj.getString("y")));
+            tiro.setSender(obj.getString("sender"));
         }else{
             tiro.setMsg(textMessage);
         }
