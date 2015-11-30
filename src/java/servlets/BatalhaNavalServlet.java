@@ -70,12 +70,37 @@ public class BatalhaNavalServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String perfil = request.getParameter("perfil");
-        if(perfil.equals(Perfil.JOGADOR)){
-            getContextoJogador(request,response);
-        }else{
-            getContextoVisualizador(request, response);
+        String acao = request.getParameter("acao");
+        if (acao.equals("iniciarBatalha")) {
+            String perfil = request.getParameter("perfil");
+            if (perfil.equals(Perfil.JOGADOR)) {
+                getContextoJogador(request, response);
+            } else {
+                getContextoVisualizador(request, response);
+            }
         }
+        //registrarTiroDisparado
+        else{
+            int codigoMesa = Integer.parseInt(request.getParameter("mesa"));
+            BatalhaNaval batalha = null;
+            for(Mesa mesa : listaMesas){
+                if(mesa.getCodigo() == codigoMesa){
+                    batalha = mesa.getBatalhaNaval();
+                    break;
+                }
+            }
+            int x = Integer.parseInt(request.getParameter("x"));
+            int y = Integer.parseInt(request.getParameter("y"));
+            if(request.getParameter("nomeJogador").
+                    equals(batalha.getJogador1().getNome())){
+                TiroDisparado tiro = new TiroDisparado(x, y);
+                batalha.getJogador1().getListTirosDisparados().add(tiro);
+            }else{
+                TiroDisparado tiro = new TiroDisparado(x, y);
+                batalha.getJogador2().getListTirosDisparados().add(tiro);
+            }
+        }
+        
     }
     
     /**
@@ -127,7 +152,7 @@ public class BatalhaNavalServlet extends HttpServlet {
                     response.getWriter().write("");
                 }
             }else{
-                this.batalhaNaval = this.inicializarJogo(request, response);  
+                this.batalhaNaval = this.inicializarJogo(request);  
                 this.batalhaNaval.setTemSegundoJogador(false);
                 mesa = new Mesa(nomeMesa, codigo, batalhaNaval);
                 listaMesas.add(mesa);
@@ -135,7 +160,7 @@ public class BatalhaNavalServlet extends HttpServlet {
                 response.getWriter().write(json.toString());
             }
         }else{
-            this.batalhaNaval = this.inicializarJogo(request, response);  
+            this.batalhaNaval = this.inicializarJogo(request);  
             this.batalhaNaval.setTemSegundoJogador(false);
             mesa = new Mesa(nomeMesa, codigo, batalhaNaval);
             listaMesas.add(mesa);
@@ -162,7 +187,7 @@ public class BatalhaNavalServlet extends HttpServlet {
         }
     }
     
-    public BatalhaNaval inicializarJogo(HttpServletRequest request, HttpServletResponse response){
+    public BatalhaNaval inicializarJogo(HttpServletRequest request){
         Tabuleiro tabuleiro1 = new Tabuleiro(10,10);
         Tabuleiro tabuleiro2 = new Tabuleiro(10,10);
         Embarcacao portaAviao = new Embarcacao(4);

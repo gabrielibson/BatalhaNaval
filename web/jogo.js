@@ -6,6 +6,8 @@ var meusAcertos = 0;
 var mesaSemJogador = false;
 var mesaComDoisJogadores = false;
 var profile;
+var codigoMesa;
+var nomeJogador;
 var tabuleiro1 = document.getElementById("tabuleiro-jogador1");
 var tabuleiro2 = document.getElementById("tabuleiro-jogador2");
 
@@ -103,8 +105,10 @@ function MontarTabuleiro(codMesa, perfil, nickname) {
         }
     }
     profile = perfil;
+    codigoMesa = codMesa;
+    nomeJogador = nickname;
     xhr.onreadystatechange = tratarColecao;
-    xhr.open("get", "BatalhaNavalServlet?mesa="+codMesa+"&perfil="+perfil+"&nickname="+nickname, true);
+    xhr.open("get", "BatalhaNavalServlet?mesa="+codMesa+"&perfil="+perfil+"&nickname="+nickname+"&acao=iniciarBatalha", true);
     xhr.send(null);
 }
 
@@ -129,6 +133,7 @@ function setEmbarcacoesVisualizador(partida){
             div.style.backgroundColor = "cyan";
         }
     }
+    setTirosDisparados(partida);
 }
 
 function setEmbarcacoesJogador(partida) {
@@ -156,6 +161,19 @@ function setEmbarcacoesJogador(partida) {
                 div.style.backgroundColor = "cyan";
             }
         }
+    }
+}
+
+function setTirosDisparados(partida){
+    var tirosJogador1 = partida.jogador1.listTirosDisparados;
+    var tirosJogador2 = partida.jogador2.listTirosDisparados;
+    for(var i = 0; i < tirosJogador1.length; i++){
+        var tiro = tirosJogador1[i];
+        verificarTiroDisparado(tiro.x.toString(), tiro.y.toString());
+    }
+    for(var i = 0; i < tirosJogador2.length; i++){
+        var tiro = tirosJogador1[i];
+        tiroNoMeuTabuleiro(tiro.x.toString(), tiro.y.toString());
     }
 }
 
@@ -219,6 +237,17 @@ function zerarMeusAcertos(){
     meusAcertos = 0;
 }
 
+function registerTiroDisparado(x, y){
+    xhr.onreadystatechange = function(){
+        if(xhr.readyState === 4){
+            sendTiro(x,y);
+        }
+    };
+    xhr.open("get", "BatalhaNavalServlet?mesa="+codigoMesa+
+            "&nomeJogador="+nomeJogador+"&acao=registerTiro&x="+x+"&y="+y, true);
+    xhr.send(null);
+}
+
 function atirar(evt){
     if(!jogou){
         jogou = true;
@@ -237,7 +266,7 @@ function atirar(evt){
             }
         }
         if(!fimDeJogo){
-            sendTiro(posx,posy);
+            registerTiroDisparado(posx, posy);
         }
     }
     else{

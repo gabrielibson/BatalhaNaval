@@ -32,8 +32,12 @@ function onMessageReceived(evt) {
                 alert("Agora é sua vez...");
             }
         }else{
-            verificarTiroDisparado(tiroDisparado.x, tiroDisparado.y);
-            tiroNoMeuTabuleiro(tiroDisparado.x, tiroDisparado.y);
+            var jogador = document.getElementById("jogador1").firstChild.nodeValue;
+            if(tiroDisparado.sender === jogador){
+                verificarTiroDisparado(tiroDisparado.x, tiroDisparado.y);
+            }else{
+                tiroNoMeuTabuleiro(tiroDisparado.x, tiroDisparado.y);
+            }
         }
     } else if(evt.data.indexOf("2") !== -1){
         var nickname = evt.data.split("_")[1];

@@ -5,6 +5,10 @@
  */
 package jogo;
 
+import java.util.ArrayList;
+import java.util.List;
+import servlets.TiroDisparado;
+
 /**
  *
  * @author pbeat_000
@@ -14,6 +18,15 @@ public class Jogador {
     private String nome;
     private Tabuleiro tabuleiro;
     private Tabuleiro tabuleiroContra;
+    private List<TiroDisparado> listTirosDisparados = new ArrayList<>();
+
+    public List<TiroDisparado> getListTirosDisparados() {
+        return listTirosDisparados;
+    }
+
+    public void setListTirosDisparados(List<TiroDisparado> listTirosDisparados) {
+        this.listTirosDisparados = listTirosDisparados;
+    }
 
     public Jogador(Tabuleiro tabuleiro){
         this.tabuleiro = tabuleiro;
