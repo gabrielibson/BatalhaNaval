@@ -18,6 +18,7 @@ import jogo.Embarcacao;
 import jogo.Jogador;
 import jogo.Mesa;
 import jogo.Tabuleiro;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import util.Perfil;
 
@@ -30,7 +31,7 @@ public class BatalhaNavalServlet extends HttpServlet {
     private static int codigoJogador = 0;
     private BatalhaNaval batalhaNaval = null;
     JSONObject json = null;
-    private static List<Mesa> listaMesas = new ArrayList<>();
+    private static final List<Mesa> listaMesas = new ArrayList<>();
     
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -80,27 +81,14 @@ public class BatalhaNavalServlet extends HttpServlet {
             }
         }
         //registrarTiroDisparado
-        else{
-            int codigoMesa = Integer.parseInt(request.getParameter("mesa"));
-            BatalhaNaval batalha = null;
-            for(Mesa mesa : listaMesas){
-                if(mesa.getCodigo() == codigoMesa){
-                    batalha = mesa.getBatalhaNaval();
-                    break;
-                }
-            }
-            int x = Integer.parseInt(request.getParameter("x"));
-            int y = Integer.parseInt(request.getParameter("y"));
-            if(request.getParameter("nomeJogador").
-                    equals(batalha.getJogador1().getNome())){
-                TiroDisparado tiro = new TiroDisparado(x, y);
-                batalha.getJogador1().getListTirosDisparados().add(tiro);
-            }else{
-                TiroDisparado tiro = new TiroDisparado(x, y);
-                batalha.getJogador2().getListTirosDisparados().add(tiro);
-            }
+        else if(acao.equals("registerTiro")){
+            registrarTiroDisparado(request);
         }
-        
+        //listarMesas
+        else{
+            JSONArray jsonArray = new JSONArray(listaMesas);
+            response.getWriter().write(jsonArray.toString());
+        }
     }
     
     /**
@@ -166,6 +154,28 @@ public class BatalhaNavalServlet extends HttpServlet {
             listaMesas.add(mesa);
             json = new JSONObject(batalhaNaval);
             response.getWriter().write(json.toString());
+        }
+    }
+    
+    private void registrarTiroDisparado(HttpServletRequest request) {
+
+        int codigoMesa = Integer.parseInt(request.getParameter("mesa"));
+        BatalhaNaval batalha = null;
+        for (Mesa mesa : listaMesas) {
+            if (mesa.getCodigo() == codigoMesa) {
+                batalha = mesa.getBatalhaNaval();
+                break;
+            }
+        }
+        int x = Integer.parseInt(request.getParameter("x"));
+        int y = Integer.parseInt(request.getParameter("y"));
+        if (request.getParameter("nomeJogador").
+                equals(batalha.getJogador1().getNome())) {
+            TiroDisparado tiro = new TiroDisparado(x, y);
+            batalha.getJogador1().getListTirosDisparados().add(tiro);
+        } else {
+            TiroDisparado tiro = new TiroDisparado(x, y);
+            batalha.getJogador2().getListTirosDisparados().add(tiro);
         }
     }
     

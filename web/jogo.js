@@ -172,7 +172,7 @@ function setTirosDisparados(partida){
         verificarTiroDisparado(tiro.x.toString(), tiro.y.toString());
     }
     for(var i = 0; i < tirosJogador2.length; i++){
-        var tiro = tirosJogador1[i];
+        var tiro = tirosJogador2[i];
         tiroNoMeuTabuleiro(tiro.x.toString(), tiro.y.toString());
     }
 }
@@ -239,13 +239,12 @@ function zerarMeusAcertos(){
 
 function registerTiroDisparado(x, y){
     xhr.onreadystatechange = function(){
-        if(xhr.readyState === 4){
-            sendTiro(x,y);
-        }
+        if(xhr.readyState === 4){}
     };
     xhr.open("get", "BatalhaNavalServlet?mesa="+codigoMesa+
             "&nomeJogador="+nomeJogador+"&acao=registerTiro&x="+x+"&y="+y, true);
     xhr.send(null);
+    sendTiro(x,y);
 }
 
 function atirar(evt){
@@ -261,6 +260,7 @@ function atirar(evt){
             meusAcertos++;
             if(meusAcertos === 20){
                 setFimDeJogo(true);
+                registerTiroDisparado(posx,posy);
                 alert("Você venceu!");
                 sair(getNickName()+" venceu a partida!");
             }
@@ -281,3 +281,34 @@ function atirar(evt){
         }
     }
 }
+
+function listarMesas(){
+    xhr.onreadystatechange = function(){
+        if(xhr.readyState === 4){
+            var array = xhr.responseText;
+            var listaMesas = JSON.parse(array);
+            var divSelect = document.getElementById("divSelect");
+            var saida = "<select id='mesa'>";
+            saida+= "<option value='0'>Selecione</option>";
+            var mesa;
+            
+            for(var j=1; j <= 12; j++){
+                for(var i = 0; i < listaMesas.length; i++){
+                    mesa = listaMesas[i];
+                    if(mesa.codigo === j){
+                        var op1 = "<option value='"+j+"'>Mesa "+j+"    1 Jogador</option>";
+                        var op2 = "<option value='"+j+"'>Mesa "+j+"    2 Jogadores</option>";
+                        saida += mesa.batalhaNaval.temSegundoJogador?op2:op1;
+                    }else{
+                        saida+= "<option value='"+j+"'>Mesa "+j+"    0 Jogadores</option>";
+                    }                
+                }                
+            }
+           
+        }
+    };
+    xhr.open("get", "BatalhaNavalServlet?acao=listarMesas", true);
+    xhr.send(null);
+}
+
+onload = listarMesas;

@@ -20,6 +20,7 @@ function writeToScreen(message) {
 }
 
 function onMessageReceived(evt) {
+    //Verifica se foi um tiro recebido
     if (evt.data.indexOf("x") !== -1) {
         var acertou = false;
         var tiroDisparado = JSON.parse(evt.data);
@@ -39,12 +40,16 @@ function onMessageReceived(evt) {
                 tiroNoMeuTabuleiro(tiroDisparado.x, tiroDisparado.y);
             }
         }
-    } else if(evt.data.indexOf("2") !== -1){
+    } 
+    //Verifica se recebeu a mensagem que o segundo jogador entrou
+    else if(evt.data.indexOf("2") !== -1){
         var nickname = evt.data.split("_")[1];
         $("#tabuleiro-jogador2").show();
         $("#aguardando").hide();
         document.getElementById("jogador2").innerHTML = nickname;
-    }else{
+    }
+    //Verifica se recebeu a mensagem de que um jogador venceu ou abandonou a partida
+    else{
         deixarPartida(evt);
     }
 }
@@ -76,14 +81,8 @@ function connectToServer(){
         wsocket.close();
     }
     wsocket = new WebSocket(serviceLocation+mesa+"/"+perfil+"/"+$nickName);
-    //wsocket.onopen = open;
     wsocket.onmessage = onMessageReceived;
 }
-
-//    function pegarJogador(evt){
-//        var jogador = JSON.parse(evt.data);
-//        alert("Conectado: "+jogador);
-//    }
 
 function isVisualizador(){
     return visualizador;
