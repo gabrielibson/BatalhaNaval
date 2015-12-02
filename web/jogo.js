@@ -285,26 +285,9 @@ function atirar(evt){
 function listarMesas(){
     xhr.onreadystatechange = function(){
         if(xhr.readyState === 4){
-            var array = xhr.responseText;
-            var listaMesas = JSON.parse(array);
-            var divSelect = document.getElementById("divSelect");
-            var saida = "<select id='mesa'>";
-            saida+= "<option value='0'>Selecione</option>";
-            var mesa;
-            
-            for(var j=1; j <= 12; j++){
-                for(var i = 0; i < listaMesas.length; i++){
-                    mesa = listaMesas[i];
-                    if(mesa.codigo === j){
-                        var op1 = "<option value='"+j+"'>Mesa "+j+"    1 Jogador</option>";
-                        var op2 = "<option value='"+j+"'>Mesa "+j+"    2 Jogadores</option>";
-                        saida += mesa.batalhaNaval.temSegundoJogador?op2:op1;
-                    }else{
-                        saida+= "<option value='"+j+"'>Mesa "+j+"    0 Jogadores</option>";
-                    }                
-                }                
-            }
-           
+            var saida = xhr.responseText;
+            var divSelect = document.getElementById("selectMesa");
+            divSelect.innerHTML = saida;
         }
     };
     xhr.open("get", "BatalhaNavalServlet?acao=listarMesas", true);

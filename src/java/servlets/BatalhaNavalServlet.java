@@ -8,6 +8,7 @@ package servlets;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -86,8 +87,34 @@ public class BatalhaNavalServlet extends HttpServlet {
         }
         //listarMesas
         else{
-            JSONArray jsonArray = new JSONArray(listaMesas);
-            response.getWriter().write(jsonArray.toString());
+            String saida = "<select id='mesa'>";
+            saida+= "<option value='0'>Selecione</option>";
+            if (listaMesas.size() > 0) {
+                List<Mesa> listaAux = new ArrayList<>();
+                listaAux.addAll(listaMesas);
+                Collections.sort(listaAux);
+                for (int i = 1; i <= 12; i++) {
+                    Mesa mesa = null;
+                    if(!listaAux.isEmpty()){
+                        mesa = listaAux.get(0);
+                    }                    
+                    if(mesa != null && mesa.getCodigo() == i){
+                        String op1 = "<option value='"+i+"'>Mesa "+i+"&nbsp&nbsp&nbsp&nbsp 1 Jogador</option>";
+                        String op2 = "<option value='"+i+"'>Mesa "+i+"&nbsp&nbsp&nbsp&nbsp 2 Jogadores</option>";
+                        saida += mesa.getBatalhaNaval().isTemSegundoJogador()?op2:op1;
+                        listaAux.remove(0);
+                    }else{
+                        saida+= "<option value='"+i+"'>Mesa "+i+"&nbsp&nbsp&nbsp&nbsp 0 Jogadores</option>";
+                    }
+                }
+            }else{
+                for(int i = 1; i <= 12; i++){
+                    saida+= "<option value='"+i+"'>Mesa "+i+"&nbsp&nbsp&nbsp&nbsp 0 Jogadores</option>";
+                }
+            }
+            saida+= "</select>";
+            
+            response.getWriter().write(saida);
         }
     }
     

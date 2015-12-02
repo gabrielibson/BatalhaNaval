@@ -96,13 +96,12 @@ function sair(msg) {
     if (!isVisualizador()) {
         xhr.onreadystatechange = function () {
             if (xhr.readyState === 4) {
-                $('.batalha-wrapper').hide();
-                $('.batalha-signin').show();
                 document.getElementById("tabuleiro-jogador1").innerHTML = "";
                 document.getElementById("tabuleiro-jogador2").innerHTML = "";
                 zerarMeusAcertos();
                 jogou = false;
                 sendMensagem(msg);
+                location.reload();
             }
         };
         var params = "mesa=" + encodeURIComponent(codMesa);
