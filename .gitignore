@@ -1,5 +1,5 @@
-nbproject/*
-build/*
+nbproject/
+build/
 *.class
 .classpath
-/dist/
+dist/
