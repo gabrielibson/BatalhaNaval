@@ -127,7 +127,7 @@ function setEmbarcacoesVisualizador(partida){
             var celula = embarcacao.celulasEmbarcacao[j];
             var div = document.getElementById("tabuleiro1_casa_" + celula.x + "_" + celula.y);
             div.style.backgroundColor = "lightcyan";
-            div.style.border = "1px solid #0044cc;"
+            div.style.border = "1px solid #0088cc";
         }
     }
     for (var i = 0; i < embarcacoesAdversarias.length; i++) {
@@ -136,7 +136,7 @@ function setEmbarcacoesVisualizador(partida){
             var celula = embarcacao.celulasEmbarcacao[j];
             var div = document.getElementById("tabuleiro2_casa_" + celula.x + "_" + celula.y);
             div.style.backgroundColor = "lightcyan";
-            div.style.border = "1px solid #0044cc;"
+            div.style.border = "1px solid #0088cc";
         }
     }
     setTirosDisparados(partida);
@@ -154,7 +154,7 @@ function setEmbarcacoesJogador(partida) {
                 var celula = embarcacao.celulasEmbarcacao[j];
                 var div = document.getElementById("tabuleiro1_casa_" + celula.x + "_" + celula.y);
                 div.style.backgroundColor = "lightcyan";
-                div.style.border = "1px solid #0044cc";
+                div.style.border = "1px solid #0088cc";
             }
         }
     } else {
@@ -166,7 +166,7 @@ function setEmbarcacoesJogador(partida) {
                 var celula = embarcacao.celulasEmbarcacao[j];
                 var div = document.getElementById("tabuleiro1_casa_" + celula.x + "_" + celula.y);
                 div.style.backgroundColor = "lightcyan";
-                div.style.border = "1px solid #0044cc";
+                div.style.border = "1px solid #0088cc";
             }
         }
     }
