@@ -25,10 +25,12 @@ function tratarColecao(){
                     document.getElementById("jogador2").innerHTML = partida.jogador1.nome;
                     $("#tabuleiro-jogador2").show();
                     $("#aguardando").hide();
+                    $("#areaJog2").show();
                 } else {
                     document.getElementById("jogador1").innerHTML = partida.jogador1.nome;
                     $("#tabuleiro-jogador2").hide();
                     $("#aguardando").show();
+                    $("#areaJog2").hide();
                 }
             } else {
                 setEmbarcacoesVisualizador(partida);
@@ -39,10 +41,12 @@ function tratarColecao(){
                     document.getElementById("jogador2").innerHTML = partida.jogador2.nome;
                     $("#tabuleiro-jogador2").show();
                     $("#aguardando").hide();
+                    $("#areaJog2").show();
                 } else {
                     document.getElementById("jogador1").innerHTML = partida.jogador1.nome;
                     $("#tabuleiro-jogador2").hide();
                     $("#aguardando").show();
+                    $("#areaJog2").hide();
                 }
             } 
             connectToServer();
@@ -122,7 +126,8 @@ function setEmbarcacoesVisualizador(partida){
         for (var j = 0; j < embarcacao.celulasEmbarcacao.length; j++) {
             var celula = embarcacao.celulasEmbarcacao[j];
             var div = document.getElementById("tabuleiro1_casa_" + celula.x + "_" + celula.y);
-            div.style.backgroundColor = "cyan";
+            div.style.backgroundColor = "lightcyan";
+            div.style.border = "1px solid #0088cc";
         }
     }
     for (var i = 0; i < embarcacoesAdversarias.length; i++) {
@@ -130,7 +135,8 @@ function setEmbarcacoesVisualizador(partida){
         for (var j = 0; j < embarcacao.celulasEmbarcacao.length; j++) {
             var celula = embarcacao.celulasEmbarcacao[j];
             var div = document.getElementById("tabuleiro2_casa_" + celula.x + "_" + celula.y);
-            div.style.backgroundColor = "cyan";
+            div.style.backgroundColor = "lightcyan";
+            div.style.border = "1px solid #0088cc";
         }
     }
     setTirosDisparados(partida);
@@ -147,7 +153,8 @@ function setEmbarcacoesJogador(partida) {
             for (var j = 0; j < embarcacao.celulasEmbarcacao.length; j++) {
                 var celula = embarcacao.celulasEmbarcacao[j];
                 var div = document.getElementById("tabuleiro1_casa_" + celula.x + "_" + celula.y);
-                div.style.backgroundColor = "cyan";
+                div.style.backgroundColor = "lightcyan";
+                div.style.border = "1px solid #0088cc";
             }
         }
     } else {
@@ -158,7 +165,8 @@ function setEmbarcacoesJogador(partida) {
             for (var j = 0; j < embarcacao.celulasEmbarcacao.length; j++) {
                 var celula = embarcacao.celulasEmbarcacao[j];
                 var div = document.getElementById("tabuleiro1_casa_" + celula.x + "_" + celula.y);
-                div.style.backgroundColor = "cyan";
+                div.style.backgroundColor = "lightcyan";
+                div.style.border = "1px solid #0088cc";
             }
         }
     }
@@ -186,7 +194,7 @@ function tiroNoMeuTabuleiro(x,y){
             if(celula.x === parseInt(x) && celula.y === parseInt(y)){
                 acertou = true;
                 var div = document.getElementById("tabuleiro1_casa_"+celula.x+"_"+celula.y);
-                div.innerHTML = "<span style='margin-left: 10px; margin-top: 10px;'>X</span>";
+                div.innerHTML = "<span style='color:red; font-weight:bold; margin-top:12px; float: inherit; line-height:5px; margin-left: 10px; '>X</span>";
                 div.style.border = "1px solid #ff0000";
                 div.style.backgroundColor = "#ffffff";
                 break;
@@ -195,7 +203,7 @@ function tiroNoMeuTabuleiro(x,y){
     }
     if(!acertou){
         var div = document.getElementById("tabuleiro1_casa_"+x+"_"+y);
-        div.innerHTML = "<span style='margin-left: 10px; margin-top: 10px;'>.</span>";
+        div.innerHTML = "<span style='margin-left: 11px; margin-top: 8px; font-weight:bold; font-size:30px;'>.</span>";
         div.style.border = "1px solid #0000ff";
         div.style.backgroundColor = "#ffffff";
     }
@@ -211,7 +219,7 @@ function verificarTiroDisparado(x, y){
             if(celula.x === parseInt(x) && celula.y === parseInt(y)){
                 acertou = true;
                 var div = document.getElementById("tabuleiro2_casa_"+celula.x+"_"+celula.y);
-                div.innerHTML = "<span style='margin-left: 10px; margin-top: 10px;'>X</span>";
+                div.innerHTML = "<span style='color:red; font-weight:bold; margin-top:12px; float: inherit; margin-left: 10px; line-height:5px;'>X</span>";
                 div.style.border = "1px solid #ff0000";
                 div.style.backgroundColor = "#ffffff";
                 $(div).attr("onclick", "");
@@ -221,7 +229,7 @@ function verificarTiroDisparado(x, y){
     }
     if(!acertou){
            var div = document.getElementById("tabuleiro2_casa_"+x+"_"+y);
-           div.innerHTML = "<span style='margin-left: 10px; margin-top: 10px;'>.</span>";
+           div.innerHTML = "<span style='margin-left: 11px; margin-top: 8px; font-weight:bold; font-size:30px;'>.</span>";
            div.style.border = "1px solid #0000ff";
            div.style.backgroundColor = "#ffffff";
            $(div).attr("onclick", "");

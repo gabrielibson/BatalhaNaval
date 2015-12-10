@@ -46,6 +46,7 @@ function onMessageReceived(evt) {
         var nickname = evt.data.split("_")[1];
         $("#tabuleiro-jogador2").show();
         $("#aguardando").hide();
+        $("#areaJog2").show();
         document.getElementById("jogador2").innerHTML = nickname;
     }
     //Verifica se recebeu a mensagem de que um jogador venceu ou abandonou a partida
@@ -137,6 +138,9 @@ $(document).ready(function () {
     $("#jogar").click(function (evt) {
         $nickName = $('#nickname').val();
         codMesa = $('#mesa option:selected').val();
+        $('.batalha-wrapper h2').text('Bem vindo(a) '+$nickName +'!');
+        $('.batalha-wrapper h2').append("</br>");
+        $('.batalha-wrapper h2').append('Mesa- '+codMesa);
         if (validarEntrada($nickName, codMesa)) {
             mesa = "mesa" + codMesa;
             perfil = "jogador";
@@ -151,6 +155,9 @@ $(document).ready(function () {
         $nickName = $('#nickname').val();
         visualizador = true;
         codMesa = $('#mesa option:selected').val();
+        $('.batalha-wrapper h2').text('Bem vindo(a) '+$nickName +'!');
+        $('.batalha-wrapper h2').append("</br>");
+        $('.batalha-wrapper h2').append('Mesa- '+codMesa);
         if (validarEntrada($nickName, codMesa)) {
             mesa = "mesa" + codMesa;
             perfil = "visualizador";

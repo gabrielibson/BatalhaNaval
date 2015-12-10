@@ -16,7 +16,7 @@
         
         <div class="container batalha-signin">
             <form class="form-signin">
-                <h2 class="form-signin-heading">Batalha Naval - Escolha uma mesa para jogar ou visualizar</h2>
+                <h2 class="form-signin-heading">Batalha Naval</h2>
                 <label for="nickname">Nickname</label>
                 <input type="text" class="input-block-level" placeholder="Nickname" id="nickname">
                 <label for="mesa">Mesa</label>
@@ -27,29 +27,34 @@
         </div>
         
         <div class="container batalha-wrapper">
-            
-            <ul>
-                <li>Cada jogador tem direito a um tiro</li>
-                <li>Quem derrubar todos os itens do adversário vence</li>
-                <li>O Jogador 1 (você) atira na "área do jogador 2"</li>
+            <h2 class="alert alert-success"></h2>
+                       
+            <header>Regras do jogo</header>
+               <ul id="listaRegrasJogo">
+                 <li>Cada jogador tem direito a um tiro</li>
+                 <li>Quem derrubar todos os barcos do adversário vence</li>
+                 <li>O jogador que acertar um tiro tem direito a mais uma jogada.</li>
             </ul>
             
-            <div id="player1" style="width: 40%; float: left;" >
-                <h1>Área de <span id="jogador1"></span></h1>
-                <div id="tabuleiro-jogador1" class="tabuleiro">
+            <div style="margin-left: 40px; margin-right: 40px;">
+                <div id="player1" style=" float: left;" >
+                    <h1 class="tituloMesa">Área de <span id="jogador1"></span></h1>
+                    <div id="tabuleiro-jogador1" class="tabuleiro">
+                    </div>
                 </div>
-            </div>
 
-            <div id="player2" style="width: 40%; float: right;" >
-                <h1>Área de <span id="jogador2"></span></h1>
-                <div id="tabuleiro-jogador2" class="tabuleiro">
+                <div id="player2" style=" float: right;" >
+                    <h1 class="tituloMesa" id="areaJog2">Área de <span id="jogador2"></span></h1>
+                    <div id="tabuleiro-jogador2" class="tabuleiro">
+                    </div>
+                    <div id="aguardando">
+                        <h3 class="tituloMesa">Aguardando oponente...</h3>
+                 </div>
                 </div>
-                <div id="aguardando">
-                    <h2>Aguardando Oponente...</h2>
-                </div>
-            </div>
-           
-             <button class="btn btn-large btn-primary" type="button" id="sair">Sair</button>
+                <button class="btn btn-block"                  
+                type="button" id="sair" style="font-size: 14pt; color:#467588; padding: 10px; border-radius: 5px;">Sair</button>
+           </div>
+             
         </div>
        
     </body>
