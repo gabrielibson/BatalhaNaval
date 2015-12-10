@@ -138,6 +138,7 @@ $(document).ready(function () {
     $("#jogar").click(function (evt) {
         $nickName = $('#nickname').val();
         codMesa = $('#mesa option:selected').val();
+        visualizador = false;
         $('.batalha-wrapper h2').text('Bem vindo(a) '+$nickName +'!');
         $('.batalha-wrapper h2').append("</br>");
         $('.batalha-wrapper h2').append('Mesa- '+codMesa);
