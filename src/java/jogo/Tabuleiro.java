@@ -4,10 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import util.Ponto;
 
-/**
- *
- * @author pbeat_000
- */
+
 public class Tabuleiro {
     private List<Embarcacao> embarcacoes;
     private int altura;

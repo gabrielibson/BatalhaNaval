@@ -24,10 +24,7 @@ import servlets.TiroDisparadoDecoder;
 import servlets.TiroDisparadoEncoder;
 import util.Perfil;
 
-/**
- *
- * @author gabriel.ibson
- */
+
 @ServerEndpoint(value = "/batalhanavalendpoint/{mesa}/{perfil}/{nickname}", 
         encoders = TiroDisparadoEncoder.class, decoders = TiroDisparadoDecoder.class)
 public class WebsocketBatalhaNaval {

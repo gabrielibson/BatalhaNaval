@@ -9,10 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import util.Ponto;
 
-/**
- *
- * @author pbeat_000
- */
+
 public class Embarcacao {
     private List<Ponto> celulasEmbarcacao;
     private int tamanho;

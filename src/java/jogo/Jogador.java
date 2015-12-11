@@ -9,10 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import servlets.TiroDisparado;
 
-/**
- *
- * @author pbeat_000
- */
+
 public class Jogador {
     private int codigo;
     private String nome;

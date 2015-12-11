@@ -5,10 +5,7 @@
  */
 package util;
 
-/**
- *
- * @author gabriel.ibson
- */
+
 public class Perfil {
     public static final String JOGADOR = "jogador";
     public static final String VISUALIZADOR = "visualizador";
