@@ -23,10 +23,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import util.Perfil;
 
-/**
- *
- * @author pbeat_000
- */
+
 public class BatalhaNavalServlet extends HttpServlet {
 
     private static int codigoJogador = 0;

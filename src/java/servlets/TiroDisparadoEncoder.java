@@ -11,10 +11,7 @@ import javax.websocket.EncodeException;
 import javax.websocket.Encoder;
 import javax.websocket.EndpointConfig;
 
-/**
- *
- * @author pbeat_000
- */
+
 public class TiroDisparadoEncoder implements Encoder.Text<TiroDisparado>{
      @Override
     public void init(final EndpointConfig config) {

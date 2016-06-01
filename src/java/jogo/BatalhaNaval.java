@@ -5,10 +5,7 @@
  */
 package jogo;
 
-/**
- *
- * @author pbeat_000
- */
+
 public class BatalhaNaval {
     private Jogador jogador1;
     private Jogador jogador2;

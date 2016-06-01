@@ -7,10 +7,7 @@ package jogo;
 
 import util.Perfil;
 
-/**
- *
- * @author gabriel.ibson
- */
+
 public class Mesa implements Comparable<Mesa>{
     private String nome;
     private int codigo;
