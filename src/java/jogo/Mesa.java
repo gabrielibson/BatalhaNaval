@@ -7,11 +7,8 @@ package jogo;
 
 import util.Perfil;
 
-/**
- *
- * @author gabriel.ibson
- */
-public class Mesa {
+
+public class Mesa implements Comparable<Mesa>{
     private String nome;
     private int codigo;
     private BatalhaNaval batalhaNaval;
@@ -46,5 +43,16 @@ public class Mesa {
 
     public void setBatalhaNaval(BatalhaNaval batalhaNaval) {
         this.batalhaNaval = batalhaNaval;
+    }
+
+    @Override
+    public int compareTo(Mesa o) {
+        if(this.codigo < o.codigo){
+            return -1;
+        }
+        if(this.codigo > o.codigo){
+            return 1;
+        }
+        return 0;
     }
 }

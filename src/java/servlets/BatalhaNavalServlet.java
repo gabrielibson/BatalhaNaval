@@ -8,6 +8,7 @@ package servlets;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -18,19 +19,17 @@ import jogo.Embarcacao;
 import jogo.Jogador;
 import jogo.Mesa;
 import jogo.Tabuleiro;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import util.Perfil;
 
-/**
- *
- * @author pbeat_000
- */
+
 public class BatalhaNavalServlet extends HttpServlet {
 
     private static int codigoJogador = 0;
     private BatalhaNaval batalhaNaval = null;
     JSONObject json = null;
-    private static List<Mesa> listaMesas = new ArrayList<>();
+    private static final List<Mesa> listaMesas = new ArrayList<>();
     
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -70,11 +69,49 @@ public class BatalhaNavalServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String perfil = request.getParameter("perfil");
-        if(perfil.equals(Perfil.JOGADOR)){
-            getContextoJogador(request,response);
-        }else{
-            getContextoVisualizador(request, response);
+        String acao = request.getParameter("acao");
+        if (acao.equals("iniciarBatalha")) {
+            String perfil = request.getParameter("perfil");
+            if (perfil.equals(Perfil.JOGADOR)) {
+                getContextoJogador(request, response);
+            } else {
+                getContextoVisualizador(request, response);
+            }
+        }
+        //registrarTiroDisparado
+        else if(acao.equals("registerTiro")){
+            registrarTiroDisparado(request);
+        }
+        //listarMesas
+        else{
+            String saida = "<select id='mesa'>";
+            saida+= "<option value='0'>Selecione</option>";
+            if (listaMesas.size() > 0) {
+                List<Mesa> listaAux = new ArrayList<>();
+                listaAux.addAll(listaMesas);
+                Collections.sort(listaAux);
+                for (int i = 1; i <= 12; i++) {
+                    Mesa mesa = null;
+                    if(!listaAux.isEmpty()){
+                        mesa = listaAux.get(0);
+                    }                    
+                    if(mesa != null && mesa.getCodigo() == i){
+                        String op1 = "<option value='"+i+"'>Mesa "+i+"&nbsp&nbsp&nbsp&nbsp 1 Jogador</option>";
+                        String op2 = "<option value='"+i+"'>Mesa "+i+"&nbsp&nbsp&nbsp&nbsp 2 Jogadores</option>";
+                        saida += mesa.getBatalhaNaval().isTemSegundoJogador()?op2:op1;
+                        listaAux.remove(0);
+                    }else{
+                        saida+= "<option value='"+i+"'>Mesa "+i+"&nbsp&nbsp&nbsp&nbsp 0 Jogadores</option>";
+                    }
+                }
+            }else{
+                for(int i = 1; i <= 12; i++){
+                    saida+= "<option value='"+i+"'>Mesa "+i+"&nbsp&nbsp&nbsp&nbsp 0 Jogadores</option>";
+                }
+            }
+            saida+= "</select>";
+            
+            response.getWriter().write(saida);
         }
     }
     
@@ -127,7 +164,7 @@ public class BatalhaNavalServlet extends HttpServlet {
                     response.getWriter().write("");
                 }
             }else{
-                this.batalhaNaval = this.inicializarJogo(request, response);  
+                this.batalhaNaval = this.inicializarJogo(request);  
                 this.batalhaNaval.setTemSegundoJogador(false);
                 mesa = new Mesa(nomeMesa, codigo, batalhaNaval);
                 listaMesas.add(mesa);
@@ -135,12 +172,34 @@ public class BatalhaNavalServlet extends HttpServlet {
                 response.getWriter().write(json.toString());
             }
         }else{
-            this.batalhaNaval = this.inicializarJogo(request, response);  
+            this.batalhaNaval = this.inicializarJogo(request);  
             this.batalhaNaval.setTemSegundoJogador(false);
             mesa = new Mesa(nomeMesa, codigo, batalhaNaval);
             listaMesas.add(mesa);
             json = new JSONObject(batalhaNaval);
             response.getWriter().write(json.toString());
+        }
+    }
+    
+    private void registrarTiroDisparado(HttpServletRequest request) {
+
+        int codigoMesa = Integer.parseInt(request.getParameter("mesa"));
+        BatalhaNaval batalha = null;
+        for (Mesa mesa : listaMesas) {
+            if (mesa.getCodigo() == codigoMesa) {
+                batalha = mesa.getBatalhaNaval();
+                break;
+            }
+        }
+        int x = Integer.parseInt(request.getParameter("x"));
+        int y = Integer.parseInt(request.getParameter("y"));
+        if (request.getParameter("nomeJogador").
+                equals(batalha.getJogador1().getNome())) {
+            TiroDisparado tiro = new TiroDisparado(x, y);
+            batalha.getJogador1().getListTirosDisparados().add(tiro);
+        } else {
+            TiroDisparado tiro = new TiroDisparado(x, y);
+            batalha.getJogador2().getListTirosDisparados().add(tiro);
         }
     }
     
@@ -162,7 +221,7 @@ public class BatalhaNavalServlet extends HttpServlet {
         }
     }
     
-    public BatalhaNaval inicializarJogo(HttpServletRequest request, HttpServletResponse response){
+    public BatalhaNaval inicializarJogo(HttpServletRequest request){
         Tabuleiro tabuleiro1 = new Tabuleiro(10,10);
         Tabuleiro tabuleiro2 = new Tabuleiro(10,10);
         Embarcacao portaAviao = new Embarcacao(4);

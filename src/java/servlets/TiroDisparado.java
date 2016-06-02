@@ -5,10 +5,7 @@
  */
 package servlets;
 
-/**
- *
- * @author pbeat_000
- */
+
 public class TiroDisparado {
     private int x;
     private int y;

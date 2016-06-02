@@ -12,10 +12,7 @@ import javax.websocket.DecodeException;
 import javax.websocket.Decoder;
 import javax.websocket.EndpointConfig;
 
-/**
- *
- * @author pbeat_000
- */
+
 public class TiroDisparadoDecoder implements Decoder.Text<TiroDisparado>{
      @Override
     public void init(final EndpointConfig config) {

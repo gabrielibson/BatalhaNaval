@@ -20,6 +20,7 @@ function writeToScreen(message) {
 }
 
 function onMessageReceived(evt) {
+    //Verifica se foi um tiro recebido
     if (evt.data.indexOf("x") !== -1) {
         var acertou = false;
         var tiroDisparado = JSON.parse(evt.data);
@@ -32,15 +33,24 @@ function onMessageReceived(evt) {
                 alert("Agora é sua vez...");
             }
         }else{
-            verificarTiroDisparado(tiroDisparado.x, tiroDisparado.y);
-            tiroNoMeuTabuleiro(tiroDisparado.x, tiroDisparado.y);
+            var jogador = document.getElementById("jogador1").firstChild.nodeValue;
+            if(tiroDisparado.sender === jogador){
+                verificarTiroDisparado(tiroDisparado.x, tiroDisparado.y);
+            }else{
+                tiroNoMeuTabuleiro(tiroDisparado.x, tiroDisparado.y);
+            }
         }
-    } else if(evt.data.indexOf("2") !== -1){
+    } 
+    //Verifica se recebeu a mensagem que o segundo jogador entrou
+    else if(evt.data.indexOf("2") !== -1){
         var nickname = evt.data.split("_")[1];
         $("#tabuleiro-jogador2").show();
         $("#aguardando").hide();
+        $("#areaJog2").show();
         document.getElementById("jogador2").innerHTML = nickname;
-    }else{
+    }
+    //Verifica se recebeu a mensagem de que um jogador venceu ou abandonou a partida
+    else{
         deixarPartida(evt);
     }
 }
@@ -72,14 +82,8 @@ function connectToServer(){
         wsocket.close();
     }
     wsocket = new WebSocket(serviceLocation+mesa+"/"+perfil+"/"+$nickName);
-    //wsocket.onopen = open;
     wsocket.onmessage = onMessageReceived;
 }
-
-//    function pegarJogador(evt){
-//        var jogador = JSON.parse(evt.data);
-//        alert("Conectado: "+jogador);
-//    }
 
 function isVisualizador(){
     return visualizador;
@@ -93,13 +97,12 @@ function sair(msg) {
     if (!isVisualizador()) {
         xhr.onreadystatechange = function () {
             if (xhr.readyState === 4) {
-                $('.batalha-wrapper').hide();
-                $('.batalha-signin').show();
                 document.getElementById("tabuleiro-jogador1").innerHTML = "";
                 document.getElementById("tabuleiro-jogador2").innerHTML = "";
                 zerarMeusAcertos();
                 jogou = false;
                 sendMensagem(msg);
+                location.reload();
             }
         };
         var params = "mesa=" + encodeURIComponent(codMesa);
@@ -135,6 +138,10 @@ $(document).ready(function () {
     $("#jogar").click(function (evt) {
         $nickName = $('#nickname').val();
         codMesa = $('#mesa option:selected').val();
+        visualizador = false;
+        $('.batalha-wrapper h2').text('Bem vindo(a) '+$nickName +'!');
+        $('.batalha-wrapper h2').append("</br>");
+        $('.batalha-wrapper h2').append('Mesa- '+codMesa);
         if (validarEntrada($nickName, codMesa)) {
             mesa = "mesa" + codMesa;
             perfil = "jogador";
@@ -149,6 +156,9 @@ $(document).ready(function () {
         $nickName = $('#nickname').val();
         visualizador = true;
         codMesa = $('#mesa option:selected').val();
+        $('.batalha-wrapper h2').text('Bem vindo(a) '+$nickName +'!');
+        $('.batalha-wrapper h2').append("</br>");
+        $('.batalha-wrapper h2').append('Mesa- '+codMesa);
         if (validarEntrada($nickName, codMesa)) {
             mesa = "mesa" + codMesa;
             perfil = "visualizador";

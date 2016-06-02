@@ -5,10 +5,7 @@
  */
 package util;
 
-/**
- *
- * @author pbeat_000
- */
+
 public class Ponto {
     int x, y;
 
